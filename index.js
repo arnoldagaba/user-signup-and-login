@@ -7,68 +7,69 @@ let confirm = document.querySelector('#confirm-pass');
 let profilePic = document.querySelector('#picture');
 let signUpButton = document.querySelector('button');
 
-function validate(input) {
-    if (input.type === 'text') {
-        if (input.value === ''){
-            // Output on the DOM that the field is empty
-
-
-        } else {
-            // Store the data in localStorage
-        }
-    } else if (input.type === 'email') {
-        let emailPattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
-
-        if (emailPattern.test(input.value)) {
-            // Output a message to indicate a correct email pattern
-            // Store the email in localStorage
-
-
-        } else {
-            // Output a message to indicate a wrong pattern
-
-
-        }
-    }else if (input.type === 'password') {
-        let passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=*[@.#$!%*?&^])[A-Za-z\d@.#$!%*?&]{8,15}$/;
-
-        if (passwordPattern.test(input.value)) {
-            // Output a message to indicate a correct password pattern
-            // Store the password in localStorage
-
-
-        } else {
-            // Output a message to indicate a wrong password pattern
-
-
-        }
-
-        if(input.value === confirm.value){
-            // Output a message to indicate that the passwords match
-
-
-        }else{
-            // Output a message to indicate that passwords do not match
-
-
-        }
-    }
+function displayError(input, message) {
+    let errorElement = document.createElement('div');
+    errorElement.className = 'error';
+    errorElement.style.color = 'red';
+    errorElement.textContent = message;
+    input.parentElement.appendChild(errorElement);
 }
 
-let users = {};
+function clearErrors() {
+    let errors = document.querySelectorAll('.error');
+    errors.forEach(error => error.remove());
+}
+
+function validate(input) {
+    clearErrors(); // Clear any existing errors
+    let isValid = true;
+
+    if (input.type === 'text' && input.value === '') {
+        displayError(input, 'This field cannot be empty.');
+        isValid = false;
+    } else if (input.type === 'email') {
+        let emailPattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+        if (!emailPattern.test(input.value)) {
+            displayError(input, 'Please enter a valid email.');
+            isValid = false;
+        }
+    } else if (input.type === 'password') {
+        let passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&^])[A-Za-z\d@.#$!%*?&]{8,15}$/;
+        if (!passwordPattern.test(input.value)) {
+            displayError(input, 'Password must be 8-15 characters long and include uppercase, lowercase, number, and special character.');
+            isValid = false;
+        } else if (input.value !== confirm.value) {
+            displayError(confirm, 'Passwords do not match.');
+            isValid = false;
+        }
+    }
+    return isValid;
+}
 
 signUpButton.addEventListener("click", function(event) {
     event.preventDefault();
 
     let inputFields = [username, firstname, lastname, email, password, confirm, profilePic];
+    let isFormValid = true;
 
     for (let input of inputFields) {
-        validate(input);
+        if (!validate(input)) {
+            isFormValid = false;
+        }
     }
 
-    users.inputFields;
+    if (isFormValid) {
+        // Store user data in localStorage
+        let userData = {
+            username: username.value,
+            firstname: firstname.value,
+            lastname: lastname.value,
+            email: email.value,
+            profilePic: profilePic.files[0] ? URL.createObjectURL(profilePic.files[0]) : ''
+        };
+        localStorage.setItem('userData', JSON.stringify(userData));
 
-    console.log(users);
-
-    // return window.location.href = 'home.html';
-})
+        // Redirect to home page
+        window.location.href = 'home.html';
+    }
+});
