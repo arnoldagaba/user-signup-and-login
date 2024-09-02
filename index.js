@@ -1,9 +1,3 @@
-// Steps:
-// validate the input field data
-// if the data is valid we store in localStorage
-    //   after that we send them to the home (a display the username, email, and pic)
-// else we give the user an error
-
 let username = document.querySelector('#username');
 let firstname = document.querySelector('#firstname');
 let lastname = document.querySelector('#lastname');
@@ -11,56 +5,70 @@ let email = document.querySelector('#email');
 let password = document.querySelector('#password');
 let confirm = document.querySelector('#confirm-pass');
 let profilePic = document.querySelector('#picture');
-let signUpButton = document.querySelector('button')
+let signUpButton = document.querySelector('button');
+
+function validate(input) {
+    if (input.type === 'text') {
+        if (input.value === ''){
+            // Output on the DOM that the field is empty
 
 
-function validate(input){
-    // length, characters (type text) = min=5
-    // console.dir(input)
-
-    if(input.type === "text"){
-        // console.log("Text field", input.value)
-
-        if(input.value.length >= 5){
-            console.log("Valid")
-        }else{
-            console.error("Should have a min length of 5 characters")
+        } else {
+            // Store the data in localStorage
         }
-    }
-    else if(input.type === "email"){
-        console.log("Email Field", input.value)
+    } else if (input.type === 'email') {
+        let emailPattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
 
-        let pattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+        if (emailPattern.test(input.value)) {
+            // Output a message to indicate a correct email pattern
+            // Store the email in localStorage
 
-        if(pattern.test(input.value)){
-            console.log("Email is valid")
-        }else{
-            console.error("Email format is invalid, it should be something lik test@email.com")
+
+        } else {
+            // Output a message to indicate a wrong pattern
+
+
         }
-    }
-    else if(input.type === "password"){
-        // console.log("Password field", input.value)
+    }else if (input.type === 'password') {
+        let passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=*[@.#$!%*?&^])[A-Za-z\d@.#$!%*?&]{8,15}$/;
+
+        if (passwordPattern.test(input.value)) {
+            // Output a message to indicate a correct password pattern
+            // Store the password in localStorage
+
+
+        } else {
+            // Output a message to indicate a wrong password pattern
+
+
+        }
 
         if(input.value === confirm.value){
-            console.log("Password Matches")
+            // Output a message to indicate that the passwords match
+
+
         }else{
-            console.error("Confirm password is not equal to the password you entered")
+            // Output a message to indicate that passwords do not match
+
+
         }
-    }else{
-        console.log("Malformed Input Field")
     }
-    // email format 
-    // password should be the same as the confirm password
 }
 
-signUpButton.addEventListener('click', function(event){
-   event.preventDefault()
+let users = {};
 
-   let inputFields = [username, firstname,lastname, email, password, profilePic]
+signUpButton.addEventListener("click", function(event) {
+    event.preventDefault();
 
-   for(let input of inputFields){
-    validate(input)
-   }
+    let inputFields = [username, firstname, lastname, email, password, confirm, profilePic];
+
+    for (let input of inputFields) {
+        validate(input);
+    }
+
+    users.inputFields;
+
+    console.log(users);
+
+    // return window.location.href = 'home.html';
 })
-
-
