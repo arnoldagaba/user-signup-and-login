@@ -5,13 +5,15 @@ let email = document.querySelector('#email');
 let password = document.querySelector('#password');
 let confirm = document.querySelector('#confirm-pass');
 let profilePic = document.querySelector('#picture');
-let signUpButton = document.querySelector('button');
+let signUpButton = document.querySelector('#button');
 
 function displayError(input, message) {
-    let errorElement = document.createElement('div');
+    let errorElement = document .createElement('div');
+
     errorElement.className = 'error';
     errorElement.style.color = 'red';
     errorElement.textContent = message;
+
     input.parentElement.appendChild(errorElement);
 }
 
@@ -25,41 +27,47 @@ function validate(input) {
     let isValid = true;
 
     if (input.type === 'text' && input.value === '') {
-        displayError(input, 'This field cannot be empty.');
+        displayError(input, 'This field cannot be empty');
         isValid = false;
+
     } else if (input.type === 'email') {
         let emailPattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+
         if (!emailPattern.test(input.value)) {
-            displayError(input, 'Please enter a valid email.');
+            displayError(input, 'Please enter a valid email address.');
             isValid = false;
+
         }
     } else if (input.type === 'password') {
         let passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&^])[A-Za-z\d@.#$!%*?&]{8,15}$/;
+
         if (!passwordPattern.test(input.value)) {
-            displayError(input, 'Password must be 8-15 characters long and include uppercase, lowercase, number, and special character.');
+            displayError(input, 'Password must be 8-15 characters long and iclude uppercase, lowercase, number and special character.');
             isValid = false;
-        } else if (input.value !== confirm.value) {
-            displayError(confirm, 'Passwords do not match.');
+
+        }else if (input.value !== confirm.value) {
+            displayError(confirm, 'Passwords do not match!');
             isValid = false;
+
         }
     }
     return isValid;
 }
 
-signUpButton.addEventListener("click", function(event) {
+signUpButton.addEventListener('click', (event) => {
     event.preventDefault();
 
     let inputFields = [username, firstname, lastname, email, password, confirm, profilePic];
     let isFormValid = true;
 
-    for (let input of inputFields) {
-        if (!validate(input)) {
+    for (let inputField of inputFields) {
+        if (!validate(inputField)) {
             isFormValid = false;
         }
     }
 
     if (isFormValid) {
-        // Store user data in localStorage
+        //Store user data in localStorage
         let userData = {
             username: username.value,
             firstname: firstname.value,
@@ -69,7 +77,7 @@ signUpButton.addEventListener("click", function(event) {
         };
         localStorage.setItem('userData', JSON.stringify(userData));
 
-        // Redirect to home page
+        // Redirect to homepage
         window.location.href = 'home.html';
     }
 });
