@@ -5,69 +5,74 @@ let email = document.querySelector('#email');
 let password = document.querySelector('#password');
 let confirm = document.querySelector('#confirm-pass');
 let profilePic = document.querySelector('#picture');
-let signUpButton = document.querySelector('#button');
+let signUpButton = document.querySelector('button');
 
 function displayError(input, message) {
-    let errorElement = document .createElement('div');
+    // Remove any previous error message for this input
+    let existingError = input.parentElement.querySelector('.error');
+    if (existingError) {
+        existingError.remove();
+    }
 
+    // Create a new error message element
+    let errorElement = document.createElement('div');
     errorElement.className = 'error';
     errorElement.style.color = 'red';
     errorElement.textContent = message;
 
+    // Append the error message below the input field
     input.parentElement.appendChild(errorElement);
 }
 
-function clearErrors() {
-    let errors = document.querySelectorAll('.error');
-    errors.forEach(error => error.remove());
-}
-
 function validate(input) {
-    clearErrors(); // Clear any existing errors
     let isValid = true;
 
-    if (input.type === 'text' && input.value === '') {
-        displayError(input, 'This field cannot be empty');
+    if (input.type === 'text' && input.value.trim() === '') {
+        displayError(input, 'This field cannot be empty.');
         isValid = false;
-
     } else if (input.type === 'email') {
         let emailPattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
-
         if (!emailPattern.test(input.value)) {
-            displayError(input, 'Please enter a valid email address.');
+            displayError(input, 'Please enter a valid email.');
             isValid = false;
-
         }
     } else if (input.type === 'password') {
         let passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&^])[A-Za-z\d@.#$!%*?&]{8,15}$/;
-
         if (!passwordPattern.test(input.value)) {
-            displayError(input, 'Password must be 8-15 characters long and iclude uppercase, lowercase, number and special character.');
+            displayError(input, 'Password must be 8-15 characters long and include uppercase, lowercase, number, and special character.');
             isValid = false;
-
-        }else if (input.value !== confirm.value) {
-            displayError(confirm, 'Passwords do not match!');
+        }
+        if (input === password && input.value !== confirm.value) {
+            displayError(confirm, 'Passwords do not match.');
             isValid = false;
-
         }
     }
     return isValid;
 }
 
-signUpButton.addEventListener('click', (event) => {
+signUpButton.addEventListener("click", function(event) {
     event.preventDefault();
 
     let inputFields = [username, firstname, lastname, email, password, confirm, profilePic];
     let isFormValid = true;
 
-    for (let inputField of inputFields) {
-        if (!validate(inputField)) {
+    // Clear existing errors
+    inputFields.forEach(input => {
+        let error = input.parentElement.querySelector('.error');
+        if (error) {
+            error.remove();
+        }
+    });
+
+    // Validate each input
+    for (let input of inputFields) {
+        if (!validate(input)) {
             isFormValid = false;
         }
     }
 
     if (isFormValid) {
-        //Store user data in localStorage
+        // Store user data in localStorage
         let userData = {
             username: username.value,
             firstname: firstname.value,
@@ -77,7 +82,7 @@ signUpButton.addEventListener('click', (event) => {
         };
         localStorage.setItem('userData', JSON.stringify(userData));
 
-        // Redirect to homepage
+        // Redirect to home page
         window.location.href = 'home.html';
     }
 });
